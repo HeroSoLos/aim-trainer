@@ -1,0 +1,2 @@
+Features:
+    Create target class to create more targets easier and simplify code
