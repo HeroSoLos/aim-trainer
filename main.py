@@ -1,4 +1,3 @@
-# Example file showing a basic pygame "game loop"
 import pygame
 import random
 debug = False #True
