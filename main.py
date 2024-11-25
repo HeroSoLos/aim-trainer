@@ -30,17 +30,35 @@ pygame.init()
 info = pygame.display.Info()
 screenWidth = round(info.current_w * 0.95)
 screenHeight = round(info.current_h * 0.85)
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 clock = pygame.time.Clock()
 pygame.display.set_caption("Aim Trainer")
 font = pygame.font.Font(None, 36)
 
+is_fullscreen = False
 running = True
 while running:
     mousePos = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        # Handle F11 key for toggling fullscreen
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
+            is_fullscreen = not is_fullscreen
+            if is_fullscreen:
+                screen = pygame.display.set_mode((info.current_w, info.current_h), pygame.FULLSCREEN)
+                screenWidth = round(info.current_w * 0.95)
+                screenHeight = round(info.current_h * 0.85)
+            else:
+                screenWidth = round(info.current_w * 0.95)
+                screenHeight = round(info.current_h * 0.85)
+                screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
+
+        # Handle maximize/restore button
+        if event.type == pygame.VIDEORESIZE and not is_fullscreen:
+            screenWidth, screenHeight = event.size
+            screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 
         # Mouse
         if event.type == pygame.MOUSEBUTTONDOWN:
