@@ -1,11 +1,12 @@
 import random
 
 class Target:
-    def  __init__(self, index: int, position: list[2], direction: list[2], speed: int, color: list[3], image):
+    def  __init__(self, index: int, position: list[2], direction: list[2], speed, acceleration, color: list[3], image):
         self.index = index
         self.position = position
         self.direction = direction
         self.speed = speed
+        self.acceleration = acceleration
         self.color = color
         self.image = image
 

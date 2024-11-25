@@ -1,5 +1,12 @@
 Features:
-    Create target class to create more targets easier and simplify code
+    Create mouse health bar and custom mouse
+    Create attack thing
+    IDEA: CREATE A TARGET THAT TRIES TO ATTACK THE MOUSE
+    make avoid target run away from corners
+
+Bugs:
+    Fix Fullscreen issue where targets move offscreen
 
 Lazy Fix:
     Change the -1 and 1 in main for speed randomization to variables instead
+

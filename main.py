@@ -21,8 +21,8 @@ accurateHit=1
 totalHit=1
 
 targetList = []
-for i in range(100):
-    targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, [0, 0, 0], targetImage))
+for i in range(500):
+    targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage))
     targetList[i].set_speed(moveSpeed)
 
 # pygame setup
