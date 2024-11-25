@@ -1,9 +1,12 @@
 import pygame
 import random
-debug = False #True
+from targetClasses.target import Target
+from targetClasses.avoidTarget import AvoidTarget
+
+# debug = True
+debug = False
 
 # game setup
-gamemode = input("What's your gamemode? (move, stationary)")
 moveSpeed = int(input("Move speed?"))
 targetImage = pygame.image.load(r'assets/targets.png')
 targetImage = pygame.transform.scale(targetImage, (50, 50))
@@ -14,65 +17,72 @@ timeElapsed = 0.0001
 resetInterval = 10
 startTime = 0
 currentTimeElapsed = 0.001
-targetDirection = [0, 0]
 accurateHit=1
 totalHit=1
+
+targetList = []
+for i in range(100):
+    targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, [0, 0, 0], targetImage))
+    targetList[i].set_speed(moveSpeed)
 
 # pygame setup
 pygame.init()
 info = pygame.display.Info()
 screenWidth = round(info.current_w * 0.95)
-screenHeight = round(info.current_h * 0.90)
+screenHeight = round(info.current_h * 0.85)
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Aim Trainer")
-x = random.randint(targetRect.width, screenWidth - targetRect.width)
-y = random.randint(targetRect.height, screenHeight - targetRect.height)
 font = pygame.font.Font(None, 36)
 
 running = True
 while running:
+    mousePos = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
         # Mouse
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mousePos = pygame.mouse.get_pos()
             totalHit+=1
-            if targetRect.collidepoint(mousePos): #Hit target
-                x = random.randint(targetRect.width, screenWidth - targetRect.width)
-                y = random.randint(targetRect.height, screenHeight - targetRect.height)
-                score+=1
-                currentScore+=1
-                targetDirection = [random.randint(-1,1), random.randint(-1, 1)]
-                accurateHit+=1
+            for target in targetList:
+                if target.rect.collidepoint(mousePos): #Hit target
+                    target.clicked(screenWidth, screenHeight)
+                    if type(target) == Target:
+                        target.direction = [random.randint(-1, 1), random.randint(-1, 1)]
+                    elif type(target) == AvoidTarget:
+                        pass # pretty sure you don't need to do anything
+                    score+=1
+                    currentScore+=1
+                    accurateHit+=1
 
     # Background fill
     screen.fill("white")
 
     # Gamemode
-    if gamemode == "move":
-        x+=targetDirection[0]*moveSpeed
-        y+=targetDirection[1]*moveSpeed
-        if x>screenWidth or x<0:
-            targetDirection[0]*=-1
-        elif y>screenHeight or y<0:
-            targetDirection[1]*=-1
-    elif gamemode == "stationary":
-        pass
+    
+    for target in targetList:
+        target.rect.topleft = target.position
 
-    targetRect.topleft = (x, y)
+        if type(target) == Target:
+            pass
+        elif type(target) == AvoidTarget:
+            target.calculate_direction(mousePos, screenWidth, screenHeight)
+
+        target.check_wall_collision(screenWidth, screenHeight)
+        target.move()
 
     # Drawing
-    screen.blit(targetImage, (x, y))
+    for target in targetList:
+        screen.blit(target.image, target.position)
+
     scoreText = font.render(f"Avg. Time Per Target: {round(currentScore/currentTimeElapsed, 2)} | Accuracy: {int(round(accurateHit/totalHit, 2)*100)}%", True, "black")
     scoreTextRect = scoreText.get_rect()
     screen.blit(scoreText, ((info.current_w-scoreTextRect.width)/2, 10))
 
     # Debug
     if debug:
-        print(f"x {x}, y {y}")
+        print(targetList[0].direction)
 
     # update
     pygame.display.flip()

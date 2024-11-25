@@ -1,2 +1,5 @@
 Features:
     Create target class to create more targets easier and simplify code
+
+Lazy Fix:
+    Change the -1 and 1 in main for speed randomization to variables instead
