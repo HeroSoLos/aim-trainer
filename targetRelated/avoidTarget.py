@@ -1,6 +1,6 @@
 import random
 import math
-from targetClasses.target import Target
+from targetRelated.target import Target
 
 class AvoidTarget(Target):
     def __init__(self, index, position, direction, speed, acceleration, color, image, change_ratio=0.5):

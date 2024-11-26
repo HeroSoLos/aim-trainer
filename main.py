@@ -1,7 +1,7 @@
 import pygame
 import random
-from targetClasses.target import Target
-from targetClasses.avoidTarget import AvoidTarget
+from targetRelated.target import Target
+from targetRelated.avoidTarget import AvoidTarget
 
 # debug = True
 debug = False
