@@ -15,7 +15,7 @@ class AvoidTarget(Target):
         displacement_x = self.position[0] - mouse_position[0]
         displacement_y = self.position[1] - mouse_position[1]
         distance = math.sqrt(displacement_y**2 + displacement_x**2)
-        screen_diagonal_distance = math.sqrt(screen_height**2 + screen_width**2)
+        # screen_diagonal_distance = math.sqrt(screen_height**2 + screen_width**2)
         
         self.direction[0] = displacement_x / screen_width
         self.direction[1] = displacement_y / screen_height
