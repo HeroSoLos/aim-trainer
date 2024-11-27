@@ -30,7 +30,8 @@ screenHeight = round(info.current_h * 0.85)
 screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 clock = pygame.time.Clock()
 pygame.display.set_caption("Aim Trainer")
-font = pygame.font.Font(None, 36)
+scoreFont = pygame.font.Font(None, 36)
+sequenceFont = pygame.font.Font(None, 20)
 
 targetList = []
 for i in range(0):
@@ -42,6 +43,7 @@ for j in range(1):
 
 click_sequence_tracker = ClickSequenceTracker(0, [[1, 3, 1], [1, 1, 1]], 500)
 
+completed_sequence = False # TODO: Find appropriate place for this
 is_fullscreen = False
 running = True
 while running:
@@ -70,7 +72,7 @@ while running:
         # Mouse Click
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_sequence_tracker.add_click(event.button, pygame.time.get_ticks())
-            print(f"ADDED {event.button} CURRENT SEQUENCE {click_sequence_tracker.current_sequence}")
+            #print(f"ADDED {event.button} CURRENT SEQUENCE {click_sequence_tracker.current_sequence}")
             totalHit+=1
             for target in targetList: # Check if hit
                 if target.rect.collidepoint(mousePos): #Hit target
@@ -106,6 +108,8 @@ while running:
     # scoreTextRect = scoreText.get_rect()
     # screen.blit(scoreText, ((info.current_w-scoreTextRect.width)/2, 10))
 
+    click_sequence_tracker.draw(screen, sequenceFont, (0, 0, 0), mousePos)
+
     # Debug
     if debug:
         print(targetList[0].direction)
@@ -113,7 +117,7 @@ while running:
     # update
     pygame.display.flip()
 
-    # Time
+    # Time and Resets
 
     # Score counter reset
     scoreTimeElapsed = pygame.time.get_ticks() / 1000
@@ -124,7 +128,11 @@ while running:
 
     click_sequence_tracker.dt(pygame.time.get_ticks())
     if click_sequence_tracker.reset_check(pygame.time.get_ticks()):
-        print("RESET")
+        #print("RESET")
+        pass
+
+    if completed_sequence:
+        click_sequence_tracker.reset_sequence()
 
     clock.tick(120)  # limits FPS
 
