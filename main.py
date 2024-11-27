@@ -1,7 +1,6 @@
 import pygame
 import random
 
-from playerRelated import clickSequenceTracker
 from playerRelated.clickSequenceTracker import ClickSequenceTracker
 from targetRelated.target import Target
 from targetRelated.avoidTarget import AvoidTarget
