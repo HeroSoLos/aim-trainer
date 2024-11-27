@@ -4,7 +4,7 @@ import random
 from playerRelated.clickSequenceTracker import ClickSequenceTracker
 from targetRelated.target import Target
 from targetRelated.avoidTarget import AvoidTarget
-
+from playerRelated.cursor import Cursor
 # debug = True
 debug = False
 
@@ -34,20 +34,28 @@ scoreFont = pygame.font.Font(None, 36)
 sequenceFont = pygame.font.Font(None, 20)
 
 targetList = []
-for i in range(0):
+for i in range(100):
     targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage, screenWidth/4))
     targetList[i].set_speed(moveSpeed)
-for j in range(1):
+for j in range(0):
     targetList.append(Target(j, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage))
     targetList[j].set_speed(moveSpeed)
 
-click_sequence_tracker = ClickSequenceTracker(0, [[1, 3, 1], [1, 1, 1]], 500)
+click_sequence_tracker = ClickSequenceTracker(0,
+    [
+    [3, 1, 3],
+    [1, 1, 1],
+    [3, 3, 3]
+    ], 500)
+
+cursor = Cursor([0, 0], 100, 100)
 
 completed_sequence = False # TODO: Find appropriate place for this
 is_fullscreen = False
 running = True
 while running:
     mousePos = pygame.mouse.get_pos()
+    cursor.set_position(mousePos)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -84,6 +92,14 @@ while running:
             completed_sequence = click_sequence_tracker.check_completed_sequence()
             print(f"COMPLETED SEQUENCE {completed_sequence}")
 
+            # DEMO DRAW:
+            if completed_sequence == click_sequence_tracker.click_sequences[0]:
+                cursor.square_repeat_draw = 480
+            elif completed_sequence == click_sequence_tracker.click_sequences[1]:
+                cursor.hexagon_repeat_draw = 480
+            elif completed_sequence == click_sequence_tracker.click_sequences[2]:
+                cursor.triangle_repeat_draw = 480
+
     # Background fill
     screen.fill("white")
 
@@ -108,7 +124,17 @@ while running:
     # scoreTextRect = scoreText.get_rect()
     # screen.blit(scoreText, ((info.current_w-scoreTextRect.width)/2, 10))
 
+
+    #DEMO
+    cursor.draw_rect(screen)
+    cursor.draw_hexagon(screen)
+    cursor.draw_triangle(screen)
+    cursor.update_angle()
+    #DEMO END
+
     click_sequence_tracker.draw(screen, sequenceFont, (0, 0, 0), mousePos)
+
+
 
     # Debug
     if debug:
