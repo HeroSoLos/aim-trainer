@@ -1,2 +1,1 @@
-"# aim-trainer"
-"For training aim"
+#aimtrain

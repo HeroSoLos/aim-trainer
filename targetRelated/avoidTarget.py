@@ -3,8 +3,9 @@ import math
 from targetRelated.target import Target
 
 class AvoidTarget(Target):
-    def __init__(self, index, position, direction, speed, acceleration, color, image, change_ratio=0.5):
+    def __init__(self, index, position, direction, speed, acceleration, color, image, radius, change_ratio=0.5):
         super().__init__(index, position, direction, speed, acceleration, color, image)
+        self.radius = radius
         self.change_ratio = change_ratio
 
     def __str__(self):
@@ -16,17 +17,17 @@ class AvoidTarget(Target):
         distance = math.sqrt(displacement_y**2 + displacement_x**2)
         screen_diagonal_distance = math.sqrt(screen_height**2 + screen_width**2)
         
-        self.direction[0] = (displacement_x)/screen_width
-        self.direction[1] = (displacement_y)/screen_height
+        self.direction[0] = displacement_x / screen_width
+        self.direction[1] = displacement_y / screen_height
         
-        if distance < screen_diagonal_distance/4: # four to split into 4 parts on the diag
+        if distance < self.radius: # four to split into 4 parts on the diag
             pass
-        elif distance > screen_diagonal_distance/4:
+        elif distance > self.radius:
             self.direction[0] *= -1
             self.direction[1] *= -1
-        # else:
-        #     self.direction[0] = 0
-        #     self.direction[1] = 0    
+        else:
+            self.direction[0] = 0
+            self.direction[1] = 0
         
         
         

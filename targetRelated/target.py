@@ -30,6 +30,7 @@ class Target:
 
     def clicked(self, screen_width, screen_height):
         self.position = [random.randint(self.rect.width, screen_width - self.rect.width), random.randint(self.rect.height, screen_height - self.rect.height)]
+        self.direction = [random.randint(-1, 1), random.randint(-1, 1)]
 
     def check_wall_collision(self, screen_width, screen_height):
         if self.position[0] > screen_width or self.position[0] < 0:

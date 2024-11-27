@@ -20,11 +20,6 @@ currentTimeElapsed = 0.001
 accurateHit=1
 totalHit=1
 
-targetList = []
-for i in range(500):
-    targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage))
-    targetList[i].set_speed(moveSpeed)
-
 # pygame setup
 pygame.init()
 info = pygame.display.Info()
@@ -34,6 +29,11 @@ screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 clock = pygame.time.Clock()
 pygame.display.set_caption("Aim Trainer")
 font = pygame.font.Font(None, 36)
+
+targetList = []
+for i in range(500):
+    targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage, screenWidth/4))
+    targetList[i].set_speed(moveSpeed)
 
 is_fullscreen = False
 running = True
@@ -47,9 +47,9 @@ while running:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
             is_fullscreen = not is_fullscreen
             if is_fullscreen:
-                screen = pygame.display.set_mode((info.current_w, info.current_h), pygame.FULLSCREEN)
-                screenWidth = round(info.current_w * 0.95)
-                screenHeight = round(info.current_h * 0.85)
+                screenWidth = round(info.current_w)
+                screenHeight = round(info.current_h)
+                screen = pygame.display.set_mode((screenWidth*1.2, screenHeight*1.2), pygame.FULLSCREEN) # VERY UNSURE FOR THE FULLSCREEN MULTIPLIER
             else:
                 screenWidth = round(info.current_w * 0.95)
                 screenHeight = round(info.current_h * 0.85)
@@ -66,10 +66,6 @@ while running:
             for target in targetList:
                 if target.rect.collidepoint(mousePos): #Hit target
                     target.clicked(screenWidth, screenHeight)
-                    if type(target) == Target:
-                        target.direction = [random.randint(-1, 1), random.randint(-1, 1)]
-                    elif type(target) == AvoidTarget:
-                        pass # pretty sure you don't need to do anything
                     score+=1
                     currentScore+=1
                     accurateHit+=1
