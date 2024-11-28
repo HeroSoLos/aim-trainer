@@ -4,16 +4,18 @@ import pygame
 
 
 class Cursor:
-    def __init__(self, position, health, mana, spell_list=None, passive_buffs=None) -> None:
-        if spell_list is None:
-            spell_list = []
+    def __init__(self, position, health, mana, passive_buffs=None, spell_order=None) -> None:
+        if spell_order is None:
+            spell_order = []
         if passive_buffs is None:
             passive_buffs = []
+
         self.position = position
         self.health = health
         self.mana = mana
-        self.spell_list = spell_list
         self.passive_buffs = passive_buffs
+        self.spell_order = spell_order
+        self.current_spell = 0
 
         #DEMO VARIABLES:
         self.square_repeat_draw = 0
@@ -21,9 +23,21 @@ class Cursor:
         self.hexagon_repeat_draw = 0
         self.angle = 0
 
+    def __str__(self):
+        return f"Cursor({self.position})"
 
-    def cast_spell(self, spell):
-        pass
+    def cycle_spell_forward(self):
+        self.current_spell += 1
+        if self.current_spell >= len(self.spell_order):
+            self.current_spell = 0
+
+    def cycle_spell_backward(self):
+        self.current_spell -= 1
+        if self.current_spell < 0:
+            self.current_spell = len(self.spell_order) - 1
+
+    def cast_spell(self):
+        pass # return self.spell_order[current_spell]
 
     def set_position(self, mouse_position):
         self.position = mouse_position
