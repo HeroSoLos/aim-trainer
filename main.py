@@ -2,6 +2,11 @@ import pygame
 import random
 
 from playerRelated.clickSequenceTracker import ClickSequenceTracker
+from playerRelated.spells.cloneSpell import CloneSpell
+from playerRelated.spells.posionSpell import PoisonSpell
+from playerRelated.spells.summoningSpell import SummoningSpell
+from playerRelated.spells.timeSpell import TimeSpell
+from playerRelated.spells.voidSpell import VoidSpell
 from targetRelated.target import Target
 from targetRelated.avoidTarget import AvoidTarget
 from playerRelated.cursor import Cursor
@@ -9,7 +14,8 @@ from playerRelated.cursor import Cursor
 debug = False
 
 # game setup
-moveSpeed = int(input("Move speed?"))
+moveSpeed = 5
+print(f"Move speed {moveSpeed}")
 targetImage = pygame.image.load(r'assets/targets.png')
 targetImage = pygame.transform.scale(targetImage, (50, 50))
 targetRect = targetImage.get_rect()
@@ -33,13 +39,17 @@ pygame.display.set_caption("Aim Trainer")
 scoreFont = pygame.font.Font(None, 36)
 sequenceFont = pygame.font.Font(None, 20)
 
+# Targets
+
 targetList = []
-for i in range(100):
+for i in range(0):
     targetList.append(AvoidTarget(i, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage, screenWidth/4))
     targetList[i].set_speed(moveSpeed)
-for j in range(0):
+for j in range(100):
     targetList.append(Target(j, [0, 0], [0, 0], 1, 0, [0, 0, 0], targetImage))
     targetList[j].set_speed(moveSpeed)
+
+# Click Sequence
 
 click_sequence_tracker = ClickSequenceTracker(0,
     [
@@ -48,7 +58,13 @@ click_sequence_tracker = ClickSequenceTracker(0,
     [3, 3, 3]
     ], 500)
 
-cursor = Cursor([0, 0], 100, 100)
+# Spells
+clone_spell = CloneSpell()
+time_spell = TimeSpell()
+poison_spell = PoisonSpell()
+void_spell = VoidSpell()
+summoning_spell = SummoningSpell()
+cursor = Cursor([0, 0], 100, 100, spell_order=[poison_spell, void_spell, summoning_spell, clone_spell, time_spell], passive_buffs=[])
 
 completed_sequence = False # TODO: Find appropriate place for this
 is_fullscreen = False
@@ -77,6 +93,7 @@ while running:
             screenWidth, screenHeight = event.size
             screen = pygame.display.set_mode((screenWidth, screenHeight), pygame.RESIZABLE)
 
+
         # Mouse Click
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_sequence_tracker.add_click(event.button, pygame.time.get_ticks())
@@ -94,17 +111,32 @@ while running:
 
             # DEMO DRAW:
             if completed_sequence == click_sequence_tracker.click_sequences[0]:
-                cursor.square_repeat_draw = 480
+                cursor.square_repeat_draw = 720
             elif completed_sequence == click_sequence_tracker.click_sequences[1]:
-                cursor.hexagon_repeat_draw = 480
+                cursor.hexagon_repeat_draw = 720
             elif completed_sequence == click_sequence_tracker.click_sequences[2]:
-                cursor.triangle_repeat_draw = 480
+                cursor.triangle_repeat_draw = 720
 
     # Background fill
     screen.fill("white")
 
+    # Keys
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_UP]:
+        if cursor.key_hold_delay < 0:
+            cursor.cycle_spell_backward()
+            cursor.inventory_repeat_draw = cursor.INVENTORY_REPEAT
+            cursor.key_hold_delay = cursor.KEY_HOLD_REPEAT
+    if keys[pygame.K_RIGHT]:
+        cursor.inventory_repeat_draw = cursor.INVENTORY_REPEAT
+    if keys[pygame.K_DOWN]:
+        if cursor.key_hold_delay < 0:
+            cursor.cycle_spell_forward()
+            cursor.inventory_repeat_draw = cursor.INVENTORY_REPEAT
+            cursor.key_hold_delay = cursor.KEY_HOLD_REPEAT
+
+    cursor.key_hold_delay -= 1
     # Gamemode
-    
     for target in targetList:
         target.rect.topleft = target.position
 
@@ -127,14 +159,28 @@ while running:
 
     #DEMO
     cursor.draw_rect(screen)
-    cursor.draw_hexagon(screen)
-    cursor.draw_triangle(screen)
+    if cursor.hexagon_repeat_draw > 0:
+        hexagon = cursor.draw_hexagon(screen)
+        cursor.check_hexagon_collide(targetList, hexagon, screenWidth, screenHeight)
+        cursor.hexagon_repeat_draw -= 1
+
+    if cursor.triangle_repeat_draw > 0:
+        cursor.draw_triangle(screen)
+        for target in targetList:
+            target.clicked(screenWidth, screenHeight)
+            score+=1
+        cursor.triangle_repeat_draw -= 1
     cursor.update_angle()
     #DEMO END
 
     click_sequence_tracker.draw(screen, sequenceFont, (0, 0, 0), mousePos)
-
-
+    if cursor.inventory_repeat_draw > 0:
+        cursor.draw_spell_inventory(screen)
+        cursor.inventory_repeat_draw -= 1
+        if cursor.inventory_repeat_draw < 20:
+            cursor.draw_inventory_opacity_change(screen, cursor.fade_away_opacity1)
+        elif cursor.inventory_repeat_draw < 60:
+            cursor.draw_inventory_opacity_change(screen, cursor.fade_away_opacity2)
 
     # Debug
     if debug:
