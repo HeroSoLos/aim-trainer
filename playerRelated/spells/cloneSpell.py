@@ -8,4 +8,4 @@ class CloneSpell:
         self.rect = self.image.get_rect()
     def cast(self):
         # Template for casting the spell
-        print("Casting clone spell with image:", self.image)
+        print("Casting clone spell with image:", self.image_path)

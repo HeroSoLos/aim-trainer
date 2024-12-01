@@ -8,4 +8,4 @@ class TimeSpell:
         self.rect = self.image.get_rect()
     def cast(self):
         # Template for casting the spell
-        print("Casting time spell with image:", self.image)
+        print("Casting time spell with image:", self.image_path)
