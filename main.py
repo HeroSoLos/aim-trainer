@@ -2,6 +2,7 @@ import pygame
 import random
 
 from playerRelated.clickSequenceTracker import ClickSequenceTracker
+from playerRelated.spellCaster import SpellCaster
 from playerRelated.spells.cloneSpell import CloneSpell
 from playerRelated.spells.posionSpell import PoisonSpell
 from playerRelated.spells.summoningSpell import SummoningSpell
@@ -64,7 +65,12 @@ time_spell = TimeSpell()
 poison_spell = PoisonSpell()
 void_spell = VoidSpell()
 summoning_spell = SummoningSpell()
+
+spell_caster = SpellCaster([[poison_spell, 0], [void_spell, 0], [summoning_spell, 0], [clone_spell, 0], [time_spell, 0]])
+
 cursor = Cursor([0, 0], 100, 100, spell_order=[poison_spell, void_spell, summoning_spell, clone_spell, time_spell], passive_buffs=[])
+
+
 
 completed_sequence = False # TODO: Find appropriate place for this
 is_fullscreen = False
@@ -134,6 +140,8 @@ while running:
             cursor.cycle_spell_forward()
             cursor.inventory_repeat_draw = cursor.INVENTORY_REPEAT
             cursor.key_hold_delay = cursor.KEY_HOLD_REPEAT
+    if keys[pygame.K_c]:
+        spell_caster.spell_list[cursor.current_spell][1] = 240
 
     cursor.key_hold_delay -= 1
     # Gamemode
@@ -181,6 +189,10 @@ while running:
             cursor.draw_inventory_opacity_change(screen, cursor.fade_away_opacity1)
         elif cursor.inventory_repeat_draw < 60:
             cursor.draw_inventory_opacity_change(screen, cursor.fade_away_opacity2)
+
+    targets_to_click = spell_caster.check_spell_list(mousePos, targetList)
+    for target in targets_to_click:
+        target.clicked(screenWidth, screenHeight)
 
     # Debug
     if debug:

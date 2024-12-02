@@ -10,6 +10,7 @@ class VoidSpell:
         # Scalable variables
         self.level = level
         self.cool_down = cool_down
+        self.COOL_DOWN_RESET = 10
     def cast(self, mouse_pos, target_list):
         pygame.draw.circle(self.image, (0, 0, 0), mouse_pos, self.level)
         targets_to_click = []

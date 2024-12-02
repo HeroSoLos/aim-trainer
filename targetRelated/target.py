@@ -15,6 +15,14 @@ class Target:
     def __str__(self):
         return f"Target({self.index})"
 
+    def __eq__(self, other):
+        if isinstance(other, Target):
+            return self.index == other.index
+        return False
+
+    def __hash__(self):
+        return hash(self.index)
+
     def return_position(self):
         return self.position
 
@@ -37,3 +45,4 @@ class Target:
             self.direction[0] *= -1
         elif self.position[1] > screen_height or self.position[1] < 0:
             self.direction[1] *= -1
+
