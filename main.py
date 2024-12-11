@@ -190,7 +190,7 @@ while running:
         elif cursor.inventory_repeat_draw < 60:
             cursor.draw_inventory_opacity_change(screen, cursor.fade_away_opacity2)
 
-    targets_to_click = spell_caster.check_spell_list(mousePos, targetList)
+    targets_to_click = spell_caster.check_spell_list(screen, mousePos, targetList)
     for target in targets_to_click:
         target.clicked(screenWidth, screenHeight)
 

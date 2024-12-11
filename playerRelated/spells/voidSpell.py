@@ -1,7 +1,7 @@
 import pygame
 
 class VoidSpell:
-    def __init__(self, level = 25, cool_down = 10):
+    def __init__(self, level = 50, cool_down = 10):
         self.image_path = r"assets/spellIcons/void_spell2.jpg"
         self.image = pygame.image.load(self.image_path)
         self.image = pygame.transform.scale(self.image, (50, 50))
@@ -11,8 +11,11 @@ class VoidSpell:
         self.level = level
         self.cool_down = cool_down
         self.COOL_DOWN_RESET = 10
-    def cast(self, mouse_pos, target_list):
-        pygame.draw.circle(self.image, (0, 0, 0), mouse_pos, self.level)
+
+        # Draw things:
+        self.draw_at = [0, 0]
+    def cast(self, screen, mouse_pos, target_list):
+        pygame.draw.circle(screen, (0, 0, 0), mouse_pos, self.level)
         targets_to_click = []
         for target in target_list:
             dx = target.rect.centerx - mouse_pos[0]
