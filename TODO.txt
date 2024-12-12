@@ -1,12 +1,20 @@
 Features:
-    Create target class to create more targets easier and simplify code
-    Create mouse health bar and custom mouse
-    Create attack thing
-    IDEA: CREATE A TARGET THAT TRIES TO ATTACK THE MOUSE
-    make avoid target run away from corners
+    - Mouse
+        Create mouse health bar and custom mouse
+    - Targets
+        Create attack thing
+        IDEA: CREATE A TARGET THAT TRIES TO ATTACK THE MOUSE
+        Add sound effects for hits and misses
+    - GUI
+        Create a main menu and settings screen
+        Add a pause functionality during gameplay
+        Add visual effects for successful hits
+
+    Implement high score saving and loading
+    Optimize target spawning logic
+    Include keyboard controls as an alternative to mouse
 Bugs:
 
 
 Lazy Fix:
     Change the -1 and 1 in main for speed randomization to variables instead
-
