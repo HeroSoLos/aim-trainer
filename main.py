@@ -11,7 +11,7 @@ from playerRelated.spells.voidSpell import VoidSpell
 from targetRelated.target import Target
 from targetRelated.avoidTarget import AvoidTarget
 from playerRelated.cursor import Cursor
-# debug = True
+
 debug = False
 
 # game setup
@@ -66,7 +66,7 @@ poison_spell = PoisonSpell()
 void_spell = VoidSpell()
 summoning_spell = SummoningSpell()
 
-spell_caster = SpellCaster([[poison_spell, 0], [void_spell, 0], [summoning_spell, 0], [clone_spell, 0], [time_spell, 0]])
+spell_caster = SpellCaster([screen, [poison_spell, 0], [void_spell, 0], [summoning_spell, 0], [clone_spell, 0], [time_spell, 0]])
 
 cursor = Cursor([0, 0], 100, 100, spell_order=[poison_spell, void_spell, summoning_spell, clone_spell, time_spell], passive_buffs=[])
 

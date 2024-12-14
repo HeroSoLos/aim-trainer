@@ -13,6 +13,7 @@ Features:
     Implement high score saving and loading
     Optimize target spawning logic
     Include keyboard controls as an alternative to mouse
+
 Bugs:
 
 
